@@ -1,0 +1,5 @@
+f 10 d 5 thp 89.5 avg_cwnd 50
+f 10 d 10 thp 88.1 avg_cwnd 60
+f 10 d 25 thp 83.8 avg_cwnd 86
+f 10 d 50 thp 79.3 avg_cwnd 130
+f 10 d 100 thp 78.0 avg_cwnd 235 
