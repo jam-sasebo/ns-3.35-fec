@@ -10,7 +10,8 @@ build/
 *.orig
 *.patch
 *.rej
-
+/.waf3*
+/.lock*
 *.o
 *.pyc
 *.pyo
