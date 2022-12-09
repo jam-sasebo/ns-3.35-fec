@@ -6,9 +6,9 @@ NOW=$( date +"%F" )
 dir="${NOW}/fec-router/"
 echo ${dir}
 
-for RngSeed in 5; do
-    for nRouters in 5; do
-        for nFlows in 10; do 
+for RngSeed in 1; do
+    for nRouters in $0; do
+        for nFlows in 10 20; do 
 
             if [ -f "./fec-router-f${nFlows}-throughput.dat" ]; then
                 rm -f fec-router-f"${nFlows}"-throughput.dat
@@ -33,7 +33,7 @@ for RngSeed in 5; do
 
                         #cwndをプロットする
                         ./cwndplot.sh fec-router
-                        mv fec-router-cwnd.eps "${dir}"fec-router-f"${nFlows}"-d"${coredelayvalue}"-g"${nGroups}"-w"${fwin}"-cwnd.eps
+                        mv fec-routercwnd.eps "${dir}"fec-router-f"${nFlows}"-d"${coredelayvalue}"-g"${nGroups}"-w"${fwin}"-cwnd.eps
                         
                         #スループットを計算する
                         echo "fec-router flow: ${nFlows} routers: ${nRouters} delay: ${coredelayvalue} group: ${nGroups} fwin: ${fwin}"

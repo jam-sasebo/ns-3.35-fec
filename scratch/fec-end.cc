@@ -377,7 +377,7 @@ int main (int argc, char *argv[])
  FecAgent::EnablePrintRecovery (ascii.CreateFileStream ("FecEnd.Recovery"));
 
  char str[100];
- char str1[]="fec-end-3-cwnd";
+ char str1[]="fec-end-cwnd";
  char str3[]=".dat";
  
  for (uint32_t i = 0; i < nFlows; i++)

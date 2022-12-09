@@ -1,14 +1,16 @@
 #!/bin/bash
 
 NOW=$( date +"%F" )
-dir="${NOW}/tcp-router-3/"
+dir="${NOW}/tcp-router/"
 echo ${dir}
+
 if [[ -f "./tcp-router-3-throughput.dat" ]]; then
   rm -f tcp-router-3-throughput.dat
 fi
+
 for RngSeed in 1; do
-  for nFlows in 10 20 30 40 50; do
-    for coredelayvalue in 5 10 25 50 100; do
+  for nFlows in 10 20; do
+    for coredelayvalue in 100; do
       
       #結果ディレクトリを作成する
       mkdir -p "${dir}"s${RngSeed}

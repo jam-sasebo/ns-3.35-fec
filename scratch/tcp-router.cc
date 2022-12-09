@@ -388,7 +388,7 @@ int main (int argc, char *argv[])
  // FecAgent::EnablePrintSentPacket (ascii.CreateFileStream ("TcpRouter.SentPacket")); 
 ///*
  char str[100];
- char str1[]="tcp-router-3-cwnd";
+ char str1[]="tcp-router-cwnd";
  char str3[]=".dat";
  
  for (uint32_t i = 0; i < nFlows; i++)

@@ -397,7 +397,7 @@ int main (int argc, char *argv[])
  
 
  char str[100];
- char str1[]="fec-router-3-cwnd";
+ char str1[]="fec-router-cwnd";
  char str3[]=".dat";
  
  for (uint32_t i = 0; i < nFlows; i++)
