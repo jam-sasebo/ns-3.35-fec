@@ -6,7 +6,7 @@ echo ${dir}
 sumthp=0
 
 for RngSeed in 1; do
-    for nRouters in $0; do
+    for nRouters in $1; do
         for nFlows in 10 20; do 
 
             if [ -f "./fec-end-f${nFlows}-throughput.dat" ]; then
