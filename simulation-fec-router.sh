@@ -7,7 +7,7 @@ dir="${NOW}/fec-router/"
 echo ${dir}
 
 for RngSeed in 1; do
-    for nRouters in $0; do
+    for nRouters in $1; do
         for nFlows in 10 20; do 
 
             if [ -f "./fec-router-f${nFlows}-throughput.dat" ]; then

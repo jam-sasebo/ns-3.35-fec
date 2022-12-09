@@ -10,7 +10,7 @@ fi
 
 for RngSeed in 1; do
   for nFlows in 10 20; do
-    for nRouters in $0; do
+    for nRouters in $1; do
       for coredelayvalue in 100; do
         
         #結果ディレクトリを作成する
