@@ -2,7 +2,7 @@
 *.orig
 *.patch
 *.rej
-*.eps
+/*.eps
 *.o
 *.pyc
 *.pyo
@@ -23,7 +23,7 @@ FecRouter.*
 testpy-output
 
 bindings/python/pybindgen/
-__pyach__/
+/__pyach__/
 ms_print.*
 massif.*
 coverity
@@ -40,8 +40,8 @@ build/
 Data \processing/
 memo.md
 memo.pdf
-*.sh
+/*.sh
 version.cache
 package-lock.json
-*.pl
+/*.pl
 
