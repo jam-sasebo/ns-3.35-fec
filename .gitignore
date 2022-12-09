@@ -41,6 +41,7 @@ Data \processing/
 memo.md
 memo.pdf
 /*.sh
+!simulation-fec-router.sh
 version.cache
 package-lock.json
 /*.pl
