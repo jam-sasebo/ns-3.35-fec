@@ -3,3 +3,4 @@ FecRouter.*
 TcpRouter.*
 *.dat
 /2022*
+*.pyc
