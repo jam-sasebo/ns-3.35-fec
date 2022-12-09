@@ -26,6 +26,7 @@
 #include "ns3/object.h"
 #include "ns3/ptr.h"
 #include "ns3/node.h"
+#include "ns3/fec-agent.h"
 
 namespace ns3 {
 
@@ -104,6 +105,9 @@ public:
    */
   void SetNode (Ptr<Node> node);
 
+  //FEC
+  void SetFec (Ptr<FecAgent> fec);
+
   /**
    * \brief Common callback signature for packet delay and address.
    *
@@ -150,6 +154,9 @@ protected:
   Time m_stopTime;          //!< The simulation time that the application will end
   EventId m_startEvent;     //!< The event that will fire at m_startTime to start the application
   EventId m_stopEvent;      //!< The event that will fire at m_stopTime to end the application
+
+  //FEC
+  Ptr<FecAgent> m_fec;
 };
 
 } // namespace ns3

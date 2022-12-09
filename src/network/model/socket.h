@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include "ns3/inet-socket-address.h"
 #include "ns3/inet6-socket-address.h"
+#include "ns3/fec-agent.h"
 
 namespace ns3 {
 
@@ -985,6 +986,9 @@ public:
    */
   virtual void Ipv6LeaveGroup (void);
 
+  //FEC
+  void SetFec (Ptr<FecAgent> fec);
+
 protected:
   /**
    * \brief Notify through the callback (if set) that the connection has been
@@ -1077,6 +1081,9 @@ protected:
   Ptr<NetDevice> m_boundnetdevice; //!< the device this socket is bound to (might be null).
   bool m_recvPktInfo; //!< if the socket should add packet info tags to the packet forwarded to L4.
   Ipv6Address m_ipv6MulticastGroupAddress; //!< IPv6 multicast group address.
+
+  //FEC
+  Ptr<FecAgent> m_fec;
 
 private:
   Callback<void, Ptr<Socket> >                   m_connectionSucceeded;  //!< connection succeeded callback

@@ -130,6 +130,7 @@ Ipv4L3Protocol::GetTypeId (void)
 }
 
 Ipv4L3Protocol::Ipv4L3Protocol()
+  : m_fec(0)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -671,6 +672,7 @@ Ipv4L3Protocol::Receive ( Ptr<NetDevice> device, Ptr<const Packet> p, uint16_t p
       NS_LOG_WARN ("No route found for forwarding packet.  Drop.");
       m_dropTrace (ipHeader, packet, DROP_NO_ROUTE, m_node->GetObject<Ipv4> (), interface);
     }
+
 }
 
 Ptr<Icmpv4L4Protocol> 
@@ -1883,6 +1885,13 @@ Ipv4L3Protocol::HandleTimeout (void)
   m_timeoutEvent = Simulator::Schedule (difference, &Ipv4L3Protocol::HandleTimeout, this);
 
   return;
+}
+
+void
+Ipv4L3Protocol::SetFec (Ptr<FecRouterAgent> fec)
+{
+  NS_LOG_FUNCTION (this);
+  m_fec = fec;
 }
 
 } // namespace ns3

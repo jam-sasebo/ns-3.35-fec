@@ -34,6 +34,7 @@
 #include "ns3/ipv4-routing-protocol.h"
 #include "ns3/nstime.h"
 #include "ns3/simulator.h"
+#include "ns3/fec-router-agent.h"
 
 class Ipv4L3ProtocolTestCase;
 
@@ -260,6 +261,10 @@ public:
       (const Ipv4Header & header, Ptr<const Packet> packet,
           DropReason reason, Ptr<Ipv4> ipv4,
           uint32_t interface);
+
+  void SetFec (Ptr<FecRouterAgent> fec);
+
+  Ptr<FecRouterAgent> m_fec;
 
 protected:
 

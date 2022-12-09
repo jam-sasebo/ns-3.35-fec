@@ -23,6 +23,8 @@
 #include "ns3/object-factory.h"
 #include "ns3/drop-tail-queue.h"
 
+#include "ns3/packet.h"
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("FifoQueueDisc");

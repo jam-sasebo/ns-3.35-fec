@@ -23,7 +23,7 @@
 testpy-output
 
 bindings/python/pybindgen/
-
+__pyach__/
 ms_print.*
 massif.*
 coverity
@@ -36,5 +36,9 @@ build-dir/
 build/
 /.cproject
 /.project
-
+2022*/
+Data \processing/
+memo.md
+memo.pdf
+*.sh
 version.cache

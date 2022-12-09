@@ -43,7 +43,8 @@ Socket::GetTypeId (void)
 }
 
 Socket::Socket (void)
-  : m_manualIpTtl (false),
+  : m_fec (0),
+    m_manualIpTtl (false),
     m_ipRecvTos (false),
     m_ipRecvTtl (false),
     m_manualIpv6Tclass (false),
@@ -589,6 +590,13 @@ Socket::Ipv6LeaveGroup (void)
   std::vector<Ipv6Address> sourceAddresses;
   Ipv6JoinGroup (m_ipv6MulticastGroupAddress, INCLUDE, sourceAddresses);
   m_ipv6MulticastGroupAddress = Ipv6Address::GetAny ();
+}
+
+void
+Socket::SetFec (Ptr<FecAgent> fec)
+{
+  NS_LOG_FUNCTION (this);
+  m_fec = fec;
 }
 
 /***************************************************************

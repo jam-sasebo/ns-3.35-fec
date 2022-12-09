@@ -303,6 +303,11 @@ void PacketSink::HandleAccept (Ptr<Socket> s, const Address& from)
   NS_LOG_FUNCTION (this << s << from);
   s->SetRecvCallback (MakeCallback (&PacketSink::HandleRead, this));
   m_socketList.push_back (s);
+
+  if (m_fec)
+    {
+      s->SetFec (m_fec);
+    }
 }
 
 } // Namespace ns3

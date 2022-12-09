@@ -177,6 +177,11 @@ void BulkSendApplication::StartApplication (void) // Called at time specified by
         MakeCallback (&BulkSendApplication::ConnectionFailed, this));
       m_socket->SetSendCallback (
         MakeCallback (&BulkSendApplication::DataSend, this));
+
+      if (m_fec)
+        {
+          m_socket->SetFec (m_fec);
+        }
     }
   if (m_connected)
     {

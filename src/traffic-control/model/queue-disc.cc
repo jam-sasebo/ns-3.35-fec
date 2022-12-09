@@ -34,7 +34,6 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("QueueDisc");
 
-
 NS_OBJECT_ENSURE_REGISTERED (QueueDiscClass);
 
 TypeId QueueDiscClass::GetTypeId (void)
@@ -922,7 +921,7 @@ QueueDisc::Dequeue (void)
 
   NS_ASSERT (m_nPackets == m_stats.nTotalEnqueuedPackets - m_stats.nTotalDequeuedPackets);
   NS_ASSERT (m_nBytes == m_stats.nTotalEnqueuedBytes - m_stats.nTotalDequeuedBytes);
-
+  
   return item;
 }
 

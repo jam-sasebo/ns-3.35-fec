@@ -27,6 +27,8 @@
 #include "ns3/ptr.h"
 #include "ns3/object-factory.h"
 #include "ns3/ipv4-l3-protocol.h"
+#include "ns3/ipv4-l3-protocol-with-fec-encode.h"
+#include "ns3/ipv4-l3-protocol-with-fec-decode.h"
 #include "ns3/ipv6-l3-protocol.h"
 #include "internet-trace-helper.h"
 
@@ -155,6 +157,8 @@ public:
    * \param node The node on which to install the stack.
    */
   void Install (Ptr<Node> node) const;
+
+  void InstallwithFec (Ptr<Node> node, bool codeType) const;
 
   /**
    * For each node in the input container, aggregate implementations of the 

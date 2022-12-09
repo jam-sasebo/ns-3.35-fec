@@ -35,6 +35,8 @@
 #include <sstream>
 #include <list>
 
+#include "ns3/fec-tag.h"
+
 namespace ns3 {
 
 /**
@@ -552,6 +554,7 @@ Queue<Item>::DoDequeue (ConstIterator pos)
       NS_LOG_LOGIC ("m_traceDequeue (p)");
       m_traceDequeue (item);
     }
+ 
   return item;
 }
 

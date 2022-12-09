@@ -780,6 +780,13 @@ protected:
    */
   virtual uint32_t SendDataPacket (SequenceNumber32 seq, uint32_t maxSize, bool withAck);
 
+  void RedundancyControl (uint32_t cwnd);
+  void SendFecPacket (TcpHeader tcpHeader);
+  void Free (uint32_t port, Ptr<Ipv4Interface> incomingInterface);
+  void ReForwardUp (Ptr<Packet> packet, Ipv4Header header, uint16_t port, Ptr<Ipv4Interface> incomingInterface);
+  void CreateAckPacket (uint8_t flags, uint32_t roundId);
+  void ProcessAckofRecoveredPacket (const SequenceNumber32 &ackNumber, bool scoreboardUpdated,
+                                    uint32_t currentDelivered, const SequenceNumber32 &oldHeadSequence);
   /**
    * \brief Send a empty packet that carries a flag, e.g., ACK
    *
@@ -1347,6 +1354,17 @@ protected:
   TracedValue<SequenceNumber32> m_ecnEchoSeq {0};      //!< Sequence number of the last received ECN Echo
   TracedValue<SequenceNumber32> m_ecnCESeq   {0};      //!< Sequence number of the last received Congestion Experienced
   TracedValue<SequenceNumber32> m_ecnCWRSeq  {0};      //!< Sequence number of the last sent CWR
+
+  bool m_init = true;
+ 
+  uint32_t fc = 0;
+  uint32_t ic = 0;
+  uint32_t rid_ = 1;
+  uint32_t rec_rid_ = 1;
+  uint32_t m_timeout = 0;
+  uint32_t m_fastRecovery = 0;
+  uint32_t m_retransmit = 0;
+  uint32_t m_rateControl = 0;
 };
 
 /**

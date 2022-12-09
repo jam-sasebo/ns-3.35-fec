@@ -55,6 +55,7 @@ Application::GetTypeId (void)
 
 // \brief Application Constructor
 Application::Application()
+  : m_fec (0)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -112,6 +113,13 @@ Application::SetNode (Ptr<Node> node)
 {
   NS_LOG_FUNCTION (this);
   m_node = node;
+}
+
+void 
+Application::SetFec (Ptr<FecAgent> fec)
+{
+  NS_LOG_FUNCTION (this);
+  m_fec = fec;
 }
 
 // Protected methods
