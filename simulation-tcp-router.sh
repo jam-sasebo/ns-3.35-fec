@@ -21,7 +21,7 @@ for RngSeed in 1; do
 
         #シミュレーションを実行する
         echo "./waf --run \"scratch/tcp-router-3.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} \" "
-        ./waf --run "scratch/tcp-router-3.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue}" 
+        ./waf --run "scratch/tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue}" 
         # notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
 
         #cwndをプロットする
