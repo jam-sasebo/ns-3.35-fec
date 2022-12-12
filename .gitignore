@@ -2,9 +2,11 @@ FecEnd.*
 FecRouter.*
 TcpRouter.*
 *.dat
+/*.eps
 /2022*
 *.pyc
 *.o
+/*.eps
 build/
 *.diff
 *.orig
