@@ -20,7 +20,7 @@ for RngSeed in 1; do
         DIR="${dir}s${RngSeed}/f${nFlows}/d${coredelayvalue}/"
 
         #シミュレーションを実行する
-        echo "./waf --run \"scratch/tcp-router-3.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} \" "
+        echo "./waf --run \"scratch/tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} \" "
         ./waf --run "scratch/tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue}" 
         # notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
 
@@ -30,11 +30,11 @@ for RngSeed in 1; do
 
         #スループットを計算する
         sumthp=$(tail -n ${nFlows} TcpRouter.TcpDump | awk -v f=${nFlows} -F' ' '{
-          sumthp+=(($9-1)*8)/(220 * 1000 * 1000 * f);
+          sumthp+=(($9-1)*8)/(220 * 1000 * 1000);
         }END{
           print sprintf("%0.2f",sumthp);
         }')
-        echo tcp-router-3 f ${nFlows} r ${nRouters} d ${coredelayvalue} thp ${sumthp}
+        echo tcp-router f ${nFlows} r ${nRouters} d ${coredelayvalue} thp ${sumthp}
         echo f ${nFlows} r ${nRouters} d ${coredelayvalue} thp ${sumthp} >> tcp-router-throughput.dat
 
         #結果ファイルを移動
