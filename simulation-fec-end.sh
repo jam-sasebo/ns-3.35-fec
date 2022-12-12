@@ -36,7 +36,7 @@ for RngSeed in 1; do
                                 mv fec-endcwnd.eps "${dir}"fec-end-f"${nFlows}"-d"${coredelay}"-g"${nGroups}"-w"${fwin}"-cwnd.eps
 
                                 #スループットを計算する
-                                echo "fec-router-3 flow: ${nFlows} delay: ${coredelay} group: ${nGroups} fwin: ${fwin}"
+                                echo "fec-router flow: ${nFlows} delay: ${coredelay} group: ${nGroups} fwin: ${fwin}"
                                 sumthp=$(tail -n ${nFlows} FecEnd.TcpDump | awk -v f=${nFlows} -F' ' '{
                                     sumthp += ( ($9-1) * 8 ) / ( 220 * 1000 * 1000 );
                                 }END{
