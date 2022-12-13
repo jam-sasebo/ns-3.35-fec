@@ -3,7 +3,7 @@
 #実行したあとにちゃんとディレクトリが作られたかどうかを確認！！！！！！！！！！
 
 NOW=$( date +"%F" )
-dir="${NOW}/fec-router/"
+dir="${NOW}/fec-router-fwin10/"
 echo ${dir}
 
 for RngSeed in 1; do
@@ -16,7 +16,7 @@ for RngSeed in 1; do
 
             for coredelayvalue in 100; do #5 10 25 50 100
                 for nGroups in 3 1; do #1 3 5 7 9
-                    for fwin in 10 20 ; do #10 20 50 75 100
+                    for fwin in 10 ; do #10 20 50 75 100
 
                         #結果ディレクトリを作成する
                         mkdir -p "${dir}"s${RngSeed}
