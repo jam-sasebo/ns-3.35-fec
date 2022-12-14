@@ -71,7 +71,7 @@ end_clrs = ['#09282a','#1a797f','#2bc9d4','#80dfe5','#aeeaee']
 for (d,w_stream),(d_,wx_stream) in zip(router_d_steams.items(),end_d_streams.items()):
 	i=delays.index(d)
 	itr = iter(router_clrs)
-	itr_ = iter(router_clrs)
+	itr_ = iter(end_clrs)
 	ax = plt.subplot(3,2,i+1)
 	max_text = dict()
 	m = {'value':-99999999,'Text':'','id':0}
@@ -87,6 +87,7 @@ for (d,w_stream),(d_,wx_stream) in zip(router_d_steams.items(),end_d_streams.ite
 
 		ax.plot(groups,thp_stream, \
 		linestyle='-',\
+		color=f'{next(itr)}',\
 		marker='.',\
 		markersize=4,\
 		markeredgecolor="k",\
@@ -105,6 +106,7 @@ for (d,w_stream),(d_,wx_stream) in zip(router_d_steams.items(),end_d_streams.ite
 
 		ax.plot(groups,thp_stream_, \
 		linestyle=':',\
+		color=f'{next(itr_)}',\
 		marker='s',\
 		markersize=2,\
 		markeredgecolor="k",\

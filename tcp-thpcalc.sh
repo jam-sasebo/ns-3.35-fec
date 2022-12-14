@@ -17,7 +17,7 @@ for RngSeed in 1; do
                         sumthp=$(echo "${sumthp} + ${ack_v}/1000" | bc)
                     done < "${DIR}"TcpRouter.TcpDump
 
-                    avethp=$(echo "scale=5; (${sumthp} * 1000 * 8) / (bc * 220 * 1000)" | bc)
+                    avethp=$(echo "scale=5; (${sumthp} * 1000 * 8) / (220 * 1000 * 1000)" | bc)
                     
                     echo f ${nFlows}  thp ${avethp}
                     echo f ${nFlows}  thp ${avethp} >> tcp-router-3-throughput.dat

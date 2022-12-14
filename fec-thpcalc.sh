@@ -1,5 +1,4 @@
 #!/bin/bash
-trytr
 dir="${1}/fec-router-3/" 
 echo ${dir}
 sumthp=0
@@ -19,7 +18,7 @@ for RngSeed in 1; do
                         sumthp=$(echo "${sumthp} + ${ack_v}" | bc)
                     done < "${DIR}"FecRouter.TcpDump
 
-                    avethp=$(echo "scale=5; (${sumthp} * 1000 * 8) / (${nFlows} * 220 * 1000 * 1000)" | bc)
+                    avethp=$(echo "scale=5; (${sumthp} * 1000 * 8) / (220 * 1000 * 1000)" | bc)
                     
                     echo "f ${nFlows} d ${coredelayvalue} g ${nGroups} w ${fwin} thp ${avethp}"
                     echo "f ${nFlows} d ${coredelayvalue} g ${nGroups} w ${fwin} thp ${avethp}" >> fec-router-3-f"${nFlows}"-throughput.dat
