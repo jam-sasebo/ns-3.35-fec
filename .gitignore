@@ -4,6 +4,7 @@ TcpRouter.*
 *.dat
 /*.eps
 /2022*
+/Data
 *.pyc
 *.o
 /*.eps
