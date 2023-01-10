@@ -1,0 +1,41 @@
+# appended by F.Qian, at line 659 (ns-3.22's wscript)
+def add_local_programs(bld):
+    all_modules = [mod[len("ns3-"):] for mod in bld.env['NS3_ENABLED_MODULES']]
+    for dir in os.listdir('local'):
+        if os.path.isdir(os.path.join('local', dir)):
+#           bld.add_subdirs(os.path.join('local', dir)) # befor ns-3.16
+            bld.recurse(os.path.join('local', dir)) # after ns-3.17
+        elif dir.endswith(".cc"):
+            name = dir[:-len(".cc")]
+            obj = bld.create_ns3_program(name, all_modules)
+            obj.path = obj.path.find_dir('local')
+            obj.source = dir
+            obj.target = name
+            obj.name = obj.target
+            obj.install_path = None
+
+def add_wlan_programs(bld):
+    all_modules = [mod[len("ns3-"):] for mod in bld.env['NS3_ENABLED_MODULES']]
+    for dir in os.listdir('wlan'):
+        if os.path.isdir(os.path.join('wlan', dir)):
+#           bld.add_subdirs(os.path.join('wlan', dir)) # befor ns-3.16
+            bld.recurse(os.path.join('wlan', dir)) # after ns-3.17
+        elif dir.endswith(".cc"):
+            name = dir[:-len(".cc")]
+            obj = bld.create_ns3_program(name, all_modules)
+            obj.path = obj.path.find_dir('wlan')
+            obj.source = dir
+            obj.target = name
+            obj.name = obj.target
+            obj.install_path = None
+# end F.Qian
+
+
+...
+
+    add_examples_programs(bld)
+    add_scratch_programs(bld)
+    # appended by F.Qian, at line 792 (ns-3.22's wscript)
+    add_local_programs(bld)
+    add_wlan_programs(bld)
+    add_mycodes_programs(bld)

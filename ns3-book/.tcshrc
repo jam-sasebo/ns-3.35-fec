@@ -1,0 +1,51 @@
+#  command path
+setenv NS3_HOME ~/ns-allinone-3.24.1/ns-3.24.1
+set path=(~/bin /bin /sbin /usr/bin /usr/sbin /usr/local/bin ~/bin ./)
+set path=($path $NS3_HOME/../netanim-3.106)
+
+#  cd path
+#  add parents of frequently used directories
+set lcd = (/ /usr /usr/include /usr/local/bin /home)
+set cdpath = ($lcd .. ~/ ~/bin ./ $NS3_HOME $NS3_HOME/local $NS3_HOME/wlan )
+set filec
+
+set history=200
+set prompt="%{\e[01;32m%}%m:%{\e[01;35m%}`pwd`[%h]%{\e[0m%} "
+set autoexpand
+set autolist
+set autocorrect=1
+set autolist=ambiguous
+unset autologout
+set complete=enhance
+set correct=cmd
+set echo_style=both
+set ellipsis
+set fignore=(.o \~)
+set histdup=erase
+unset ignoreeof
+set listjobs=long
+set listmaxrows=23
+set notify=1
+set rmstar=1
+set savehist=( $history merge )
+set symlinks=expand
+
+setenv LANG C
+setenv PAGER /bin/more
+setenv LD_LIBRARY_PATH /usr/lib:/usr/local/lib:$NS3_HOME/build
+setenv MANPATH /usr/man:/usr/share/man
+setenv PYTHONPATH /usr/lib/python2.7/dist-packages:/usr/lib/sagemath/local/lib/python2.7
+
+# Some neat aliases
+alias 	a       alias
+a 	cd      'cd \!*;set prompt="%{\e[01;32m%}%m:%{\e[01;35m%}`pwd`[%h]%{\e[0m%} "'
+a 	po      'popd \!*;set prompt="%{\e[01;32m%}%m:%{\e[01;35m%}`pwd`[%h]%{\e[0m%} "'
+a 	pp      'pushd `pwd`;set prompt="%{\e[01;32m%}%m:%{\e[01;35m%}`pwd`[%h]%{\e[0m%} "'
+a	d 	dirs
+a	h 	history
+a	j 	jobs
+a	l 	'ls --color -aFpC'
+a	ll 	'ls --color -alFp'
+a	more	/bin/more
+a	cw	'cd ~/ns-allinone-3.24.1/ns-3.24.1/'
+

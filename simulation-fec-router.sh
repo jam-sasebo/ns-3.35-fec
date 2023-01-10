@@ -27,8 +27,8 @@ for RngSeed in 1; do
                         DIR="${dir}s${RngSeed}/f${nFlows}/d${coredelayvalue}/g${nGroups}/w${fwin}/"
                         
                         #シミュレーションを実行する
-                        echo "./waf --run \"scratch/fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups}\" "
-                        ./waf --run "scratch/fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups}" 
+                        echo "./waf --run \"scratch/burst-error-model-fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups}\" "
+                        ./waf --run "scratch/burst-error-model-fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups}" 
                         notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
 
                         #cwndをプロットする
