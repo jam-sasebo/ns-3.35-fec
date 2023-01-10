@@ -20,8 +20,8 @@ for RngSeed in 1; do
         DIR="${dir}s${RngSeed}/f${nFlows}/d${coredelayvalue}/"
 
         #シミュレーションを実行する
-        echo "./waf --run \"scratch/tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} \" "
-        ./waf --run "scratch/tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue}" 
+        echo "./waf --run \"scratch/burst-error-model-tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} \" "
+        ./waf --run "scratch/burst-error-model-tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue}" 
         # notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
 
         #cwndをプロットする
