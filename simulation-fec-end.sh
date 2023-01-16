@@ -10,7 +10,7 @@ for RngSeed in 1; do
 
             if [ -f "./fec-end-f${nFlows}-throughput.dat" ]; then
                 rm -f fec-end-f"${nFlows}"-throughput.dat
-
+            fi
             for coredelay in 100; do
                 for nGroups in 1 3 ; do
                     # for fmax in 5 25 50 247; do   #fmaxを設定するかどうか
