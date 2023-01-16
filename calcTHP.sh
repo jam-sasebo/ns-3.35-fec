@@ -150,5 +150,22 @@ for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
     # 	  g ${nGroups} w ${fwin} thp ${thp} retr ${retrate}\
     # 	  to ${timeout} redun ${redun} mc ${fmaxcount} \
     # 	  lossr ${lossrate} effrec ${effrec} fr ${fr} lostret ${lostret} wmax ${wmax}
-    echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    if [ "${sim_id}" == "tcprouter" ]; then
+    	wmax=10
+    	g=1
+    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    	wmax=20
+    	g=3
+    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+
+    	wmax=10
+    	g=3
+    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    	wmax=20
+    	g=1
+    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+
+	else
+    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+	fi
 done
