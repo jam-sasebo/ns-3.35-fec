@@ -9,7 +9,7 @@ if [[ -f "./tcp-router-throughput.dat" ]]; then
 fi
 
 for RngSeed in 1; do
-  for nFlows in 10 20; do
+  for nFlows in 10; do
     for nRouters in $1; do
       for coredelayvalue in 100; do
         
@@ -21,7 +21,7 @@ for RngSeed in 1; do
 
         #シミュレーションを実行する
         echo "./waf --run \"scratch/burst-error-model-tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} \" "
-        ./waf --run "scratch/burst-error-model-tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue}" 
+        ./waf --run "scratch/burst-error-model-tcp-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --burstSize=10 --burstRate=0.001" 
         # notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
 
         #cwndをプロットする

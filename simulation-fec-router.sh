@@ -8,7 +8,7 @@ echo ${dir}
 
 for RngSeed in 1; do
     for nRouters in $1; do
-        for nFlows in 10 20; do 
+        for nFlows in 10; do 
 
             if [ -f "./fec-router-f${nFlows}-throughput.dat" ]; then
                 rm -f fec-router-f"${nFlows}"-throughput.dat
@@ -28,7 +28,7 @@ for RngSeed in 1; do
                         
                         #シミュレーションを実行する
                         echo "./waf --run \"scratch/burst-error-model-fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups}\" "
-                        ./waf --run "scratch/burst-error-model-fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups}" 
+                        ./waf --run "scratch/burst-error-model-fec-router.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --nFlows=${nFlows} --coredelay=${coredelayvalue} --fwin=${fwin} --nGroups=${nGroups} --burstSize=10 --burstRate=0.001" 
                         notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
 
                         #cwndをプロットする

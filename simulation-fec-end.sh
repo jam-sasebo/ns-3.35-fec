@@ -6,7 +6,7 @@ echo ${dir}
 
 for RngSeed in 1; do
     for nRouters in $1; do
-        for nFlows in 10 20; do 
+        for nFlows in 10; do 
 
             if [ -f "./fec-end-f${nFlows}-throughput.dat" ]; then
                 rm -f fec-end-f"${nFlows}"-throughput.dat
@@ -26,7 +26,7 @@ for RngSeed in 1; do
                                 DIR="${dir}s${RngSeed}/f${nFlows}/d${coredelay}/g${nGroups}/w${fwin}/wmax${fmax}/"
 
                                 echo "./waf --run \"scratch/burst-error-model-fec-end.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --slowdown=${slowdown} --nFlows=${nFlows} --coredelay=${coredelay} --fwin=${fwin} --fmax=${fmax} --nGroups=${nGroups}\""
-                                ./waf --run "scratch/burst-error-model-fec-end.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --slowdown=${slowdown} --nFlows=${nFlows} --coredelay=${coredelay} --fwin=${fwin} --nGroups=${nGroups}"
+                                ./waf --run "scratch/burst-error-model-fec-end.cc --RngSeed=${RngSeed} --nRouters=${nRouters} --slowdown=${slowdown} --nFlows=${nFlows} --coredelay=${coredelay} --fwin=${fwin} --nGroups=${nGroups} --burstSize=10 --burstRate=0.001"
                                 notify-send "f${nFlows}のシミュレーション終わった。結果処理をお願いします。"
                                
                                 #cwndをプロットする
