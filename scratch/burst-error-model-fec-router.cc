@@ -82,6 +82,8 @@ int main (int argc, char *argv[])
   uint32_t    buffer = segmentSize*corebuffer*20;
   uint32_t    run = 0;
   bool sack = true;
+  double burstRate = 0.0001;
+  double burstSize = 4.0;  
 
   bool fecmode = true;
   uint32_t fwin = 10;
@@ -116,9 +118,7 @@ int main (int argc, char *argv[])
   */
 
   CommandLine cmd;
-  // uint8_t burstSize = 0;
-  double burstRate = 0.0001;
-  if (argc < 2) printUsage();
+  // if (argc < 2) printUsage();
 
   cmd.AddValue ("RngSeed","Set seed for random value",RngSeed);
   cmd.AddValue ("nFlows","Number of flows",nFlows);
@@ -136,7 +136,7 @@ int main (int argc, char *argv[])
   cmd.AddValue ("sendRxRequest","Send Retransmission Request", sendRxRequest);
   cmd.AddValue ("storeMode","USE or DISUSE storeMode", storeMode);
   cmd.AddValue ("burstRate","Error Rate of Burst Error Model", burstRate);
-  // cmd.AddValue ("burstSize","Burst Size for Burst Error Model")
+  cmd.AddValue ("burstSize","Burst Size for Burst Error Model",burstSize);
 
   cmd.Parse(argc, argv);
 
@@ -168,6 +168,14 @@ int main (int argc, char *argv[])
   Config::SetDefault ("ns3::FecAgent::FecWin", UintegerValue (0));
   Config::SetDefault ("ns3::FecAgent::NumberofGroups", UintegerValue (1));
   Config::SetDefault ("ns3::FecAgent::SegmentSize", UintegerValue (segmentSize));
+  
+  Config::SetDefault ("ns3::BurstErrorModel::ErrorRate", DoubleValue (burstRate));
+  Ptr<UniformRandomVariable> burstSz = CreateObject<UniformRandomVariable> ();
+  burstSz->SetAttribute ("Min", DoubleValue (1));
+  burstSz->SetAttribute ("Max", DoubleValue (burstSize));
+  Config::SetDefault ("ns3::BurstErrorModel::BurstSize", PointerValue (burstSz));
+
+
 
   //RngSeed
   SeedManager::SetSeed(RngSeed);
@@ -370,8 +378,6 @@ int main (int argc, char *argv[])
 
   //Set Burst Error Model
   Ptr<BurstErrorModel> bem = CreateObject<BurstErrorModel> ();
-  bem->SetAttribute ("ErrorRate", DoubleValue (burstRate));
-  bem->SetAttribute ("BurstSize", StringValue ("ns3::UniformRandomVariable[Min=1|Max=4]"));
   R1_RkNetDevices.at((nRouters-1)/2).Get(0)->SetAttribute  ("ReceiveErrorModel", PointerValue (bem));
 
   /*SOCKET*/

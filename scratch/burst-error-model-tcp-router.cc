@@ -22,7 +22,9 @@
 #include "ns3/traffic-control-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/fec-module.h"
-
+#include "ns3/pointer.h"
+#include "ns3/error-model.h"
+#include "ns3/log.h"
 // #include "ns3/visualizer-module.h"
 // #include "ns3/pyviz.h"
 
@@ -74,7 +76,7 @@ int main (int argc, char *argv[])
   uint32_t    run = 0;
   bool        sack = true;
   double burstRate = 0.0001;
-  // uint8_t burstSize = 0;
+  double burstSize = 4.0; 
 
   std::string fecMode = "Static"; 
   std::string boundMode = "OUT"; 
@@ -129,7 +131,7 @@ int main (int argc, char *argv[])
   cmd.AddValue ("nGroups","Number of groups", nGroups);
   cmd.AddValue ("slowdown","rate control value",slowdown);
   cmd.AddValue ("burstRate","Error Rate of Burst Error Model", burstRate);
-  // cmd.AddValue ("burstSize","Burst Size for Burst Error Model")
+  cmd.AddValue ("burstSize","Burst Size for Burst Error Model",burstSize);
 
   cmd.Parse(argc, argv);
 
@@ -160,8 +162,12 @@ int main (int argc, char *argv[])
   Config::SetDefault ("ns3::FecAgent::NumberofGroups", UintegerValue (nGroups));
   Config::SetDefault ("ns3::FecAgent::SegmentSize", UintegerValue (segmentSize));
   Config::SetDefault ("ns3::FecAgent::RateControlValue", DoubleValue(slowdown));
-
-	std::cout << "nFlows: " << nFlows << std::endl;
+  
+  Config::SetDefault ("ns3::BurstErrorModel::ErrorRate", DoubleValue (burstRate));
+  Ptr<UniformRandomVariable> burstSz = CreateObject<UniformRandomVariable> ();
+  burstSz->SetAttribute ("Min", DoubleValue (1));
+  burstSz->SetAttribute ("Max", DoubleValue (burstSize));
+  Config::SetDefault ("ns3::BurstErrorModel::BurstSize", PointerValue (burstSz));
 
   //RngSeed
   SeedManager::SetSeed(RngSeed);
@@ -345,8 +351,6 @@ int main (int argc, char *argv[])
   
   //Set Burst Error Model
   Ptr<BurstErrorModel> bem = CreateObject<BurstErrorModel> ();
-  bem->SetAttribute ("ErrorRate", DoubleValue (burstRate));
-  bem->SetAttribute ("BurstSize", StringValue ("ns3::UniformRandomVariable[Min=1|Max=4]"));
   R1_RkNetDevices.at((nRouters-1)/2).Get(0)->SetAttribute  ("ReceiveErrorModel", PointerValue (bem));
 
   /*SOCKET*/

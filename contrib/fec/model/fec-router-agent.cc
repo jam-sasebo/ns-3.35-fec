@@ -436,14 +436,6 @@ FecRouterAgent::MarkGroupFecTable (Ptr<Packet> packet)
                     }
                 }
             }
-
-          // if (pi.empty())
-          // {
-          //   itr = pi.begin ();
-          //   itr->check_ = true;
-          //   return (nlost + 1);
-          // }
-
         }
     }
 }

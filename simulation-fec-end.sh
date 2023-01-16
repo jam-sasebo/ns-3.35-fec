@@ -3,7 +3,6 @@
 NOW=$( date +"%F" )
 dir="${NOW}/fec-end/"
 echo ${dir}
-sumthp=0
 
 for RngSeed in 1; do
     for nRouters in $1; do
@@ -11,7 +10,6 @@ for RngSeed in 1; do
 
             if [ -f "./fec-end-f${nFlows}-throughput.dat" ]; then
                 rm -f fec-end-f"${nFlows}"-throughput.dat
-            fi
 
             for coredelay in 100; do
                 for nGroups in 1 3 ; do
