@@ -16,13 +16,12 @@ PARAMS_REGEX+='s|/| |g;' #スラッシュをスペースに変換
 PARAMS_REGEX+='s|([a-z](?=\d))|$1 |g;print;'  #パラメータを表示用にする
 
 # echo "nFlows,nRouters,coredelay,nGroups,fwin,fmax,総スループット,再送率,タイムアウト回数,冗長率,Fmaxカウント,ロス率,有効回復成功率" 
-# echo "sim_id,nFlows,nRouters,coredelay,nGroups,fwin,fmax,thp,retr,timeout,redun,fmaxcount,lossr,effrec,fr" 
+echo "sim_id,nFlows,nRouters,coredelay,nGroups,fwin,thp,retr,timeout,redun,fmaxcount,lossr,effrec,fr,lostret,fmax" 
 for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
 
 	datapath=$(echo $filepath | perl -ne "${DATAPATH_REGEX}")
 	outputdir=$(echo $filepath | perl -ne "${OUTPUTDIR_REGEX}" )
 	params=$(echo $filepath | perl -ne "${PARAMS_REGEX}")
-	echo ${params}
 	filename=$(echo $filepath | perl -ne "${DATAFILE_REGEX}" )
 	sim_id=$(echo $filename | perl -ne "${SIMID_REGEX}")
 
@@ -33,6 +32,9 @@ for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
 	nGroups=$(echo $params | perl -wlne '( m|(?<=g )\d+| and print $&) or print 0;')
 	fwin=$(echo $params | perl -wlne '(m|(?<=w )\d+| and print $&) or print 0;')
 	wmax=$(echo $params | perl -wlne '(m|(?<=wmax )\d+| and print $&) or print 0;')
+	if [ "$wmax" == "0" ];then
+		wmax=$fwin 
+	fi
 	#スループット
     thp=$(tail -n ${nFlows} "${filepath}" | \
 	awk -F' ' '{
@@ -144,13 +146,9 @@ for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
 	}')
 	fi
 
-    echo id ${sim_id} f ${nFlows} r ${nRouters} d ${coredelay}\
-    	  g ${nGroups} w ${fwin} thp ${thp} retr ${retrate}\
-    	  to ${timeout} redun ${redun} mc ${fmaxcount} \
-    	  lossr ${lossrate} effrec ${effrec} fr ${fr} lostret ${lostret} wmax ${wmax}
-
-    # echo ${sim_id},${nFlows},${nRouters},${coredelay},\
-    # 	  ${nGroups},${fwin},${thp},${retrate}\
-    # 	  ${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr}
-    # 	  >> "${outputdir}""${sim_id}"-throughput.dat
+    # echo id ${sim_id} f ${nFlows} r ${nRouters} d ${coredelay}\
+    # 	  g ${nGroups} w ${fwin} thp ${thp} retr ${retrate}\
+    # 	  to ${timeout} redun ${redun} mc ${fmaxcount} \
+    # 	  lossr ${lossrate} effrec ${effrec} fr ${fr} lostret ${lostret} wmax ${wmax}
+    echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
 done
