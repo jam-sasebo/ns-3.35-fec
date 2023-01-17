@@ -15,7 +15,7 @@ PARAMS_REGEX+='s|/[^/]*TcpDump||g;' #結果ファイル名をパスから削除
 PARAMS_REGEX+='s|/| |g;' #スラッシュをスペースに変換
 PARAMS_REGEX+='s|([a-z](?=\d))|$1 |g;print;'  #パラメータを表示用にする
 
-# echo "nFlows,nRouters,coredelay,nGroups,fwin,fmax,総スループット,再送率,タイムアウト回数,冗長率,Fmaxカウント,ロス率,有効回復成功率" 
+# echo "nFlows,nRouters,coredelay,nGroups,fwin,総スループット,再送率,タイムアウト回数,冗長率,Fmaxカウント,ロス率,有効回復成功率" 
 echo "sim_id,nFlows,nRouters,coredelay,nGroups,fwin,thp,retr,timeout,redun,fmaxcount,lossr,effrec,fr,lostret,fmax" 
 for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
 
@@ -26,7 +26,7 @@ for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
 	sim_id=$(echo $filename | perl -ne "${SIMID_REGEX}")
 
 	seed=$(echo $params | perl -wlne 'm|(?<=s )\d+| and print $&;')
-	nRouters=$(echo $params | perl -wlne 'm|(?<=r )\d+| and print $&;')
+	nRouters=$(echo $params | perl -wlne '(m|(?<=r )\d+| and print $&) or print 0;')
 	nFlows=$(echo $params | perl -wlne 'm|(?<=f )\d+| and print $&;' )
 	coredelay=$(echo $params | perl -wlne 'm|(?<=d )\d+| and print $&;')
 	nGroups=$(echo $params | perl -wlne '( m|(?<=g )\d+| and print $&) or print 0;')
@@ -151,19 +151,28 @@ for filepath in $(find "${dir}" -name '*TcpDump' | sort); do
     # 	  to ${timeout} redun ${redun} mc ${fmaxcount} \
     # 	  lossr ${lossrate} effrec ${effrec} fr ${fr} lostret ${lostret} wmax ${wmax}
     if [ "${sim_id}" == "tcprouter" ]; then
-    	wmax=10
-    	g=1
-    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
-    	wmax=20
-    	g=3
-    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    	for wx in 10 20 50 75 100;do
+    		wmax=$wx
+    		for g in 1 3 5 7 9;do
+    			nGroups=$g
+    			echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    		done
+    	done
+    	# wmax=10
+    	# nGroups=1
+    	# echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    	
+    	# wmax=20
+    	# nGroups=3
+    	# echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
 
-    	wmax=10
-    	g=3
-    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
-    	wmax=20
-    	g=1
-    	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    	# wmax=10
+    	# nGroups=3
+    	# echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
+    	
+    	# wmax=20
+    	# nGroups=1
+    	# echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
 
 	else
     	echo ${sim_id},${nFlows},${nRouters},${coredelay},${nGroups},${fwin},${thp},${retrate},${timeout},${redun},${fmaxcount},${lossrate},${effrec},${fr},${lostret},${wmax}
