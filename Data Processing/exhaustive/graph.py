@@ -12,9 +12,9 @@ from matplotlib.transforms import Bbox
 from matplotlib.font_manager import FontProperties
 import matplotlib.backends.backend_pdf
 pdf = matplotlib.backends.backend_pdf.PdfPages("exhaustive-output.pdf")
-sns.set(font="IPAexGothic")
-delays = [5,10,25,50,100]
-fwins = [10,20,50,75,100]
+sns.set(font="IPAexGothic",style="whitegrid",font_scale=1.5)
+delays = [10,100]
+fwins = [10,75,100]
 groups = [1,3,5,7,9]
 flows = [20]
 sim_ids = ["tcprouter","fecrouter","fecend"]
@@ -28,8 +28,15 @@ labels = {
 	'redun':['冗長率','[%]'],
 	'fmaxcount':['Fmaxカウント',''],
 	'lossr':['ロス率','[%]'],
-	'effrec':['有効回復成功率','[%]']
+	'effrec':['有効回復成功率','[%]'],
+	'fr':['高速回復カウント','[回]']
 }
+
+cols = {	'fwin':'FECウインドウfwin',\
+			'nGroups':'グループ数g',\
+			'coredelay':'遅延時間d',\
+			}
+rows = {'fecrouter':'FEC-ROUTER','fecend':'FEC-END','tcprouter':'TCP'}
 
 def make_space_above(axis, topmargin=1):
     """ increase figure size to make topmargin (in inches) space for 
@@ -46,45 +53,173 @@ def main():
 	file_path = sys.argv[1]
 	df = pd.read_csv(file_path)
 	df = df.rename(columns={'fwin':'w','fmax':'fwin'})
-	for f in flows:
-		f_stream = df.loc[df['nFlows'] == f].copy()
+	df = df.loc[df['coredelay'].isin(delays)]
+	title = ""
+	for flow in flows:
+		f_stream = df.loc[df['nFlows'] == flow].copy()
+		f_stream = f_stream.rename(columns=cols)
+		f_stream = f_stream.replace(rows)
 		for val in sys.argv[2::]:
-			cols = {'fwin':'FECウインドウfwin','nGroups':'グループ数g','coredelay':'遅延時間d'}
-			rows = {'fecrouter':'FEC-ROUTER','fecend':'FEC-END','tcprouter':'TCP'}
-			f_stream_ = f_stream.rename(columns=cols)
-			f_stream_ = f_stream_.replace(rows)
-			title = ""
-			if val in ['lossr']:
-				ax = sns.lmplot(x='グループ数g',y=val,hue='sim_id',aspect=1,\
-					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-ROUTER','FEC-END'])],\
-					row=cols['coredelay'],order=3, ci=None, legend=False)
-			elif val in ['effrec']:
-				f_stream_=f_stream_.loc[f_stream_['グループ数g'] == 3]
-				title = "グループ数g = 3"
-				ax = sns.lmplot(x='グループ数g',y=val,hue='sim_id',aspect=1,\
-					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-ROUTER','FEC-END'])],\
-					row=cols['coredelay'],order=2, ci=None, legend=False)
-			elif val in ['redun']:
-				ax = sns.lmplot(x='グループ数g',y=val,hue='sim_id',aspect=1,\
-					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-ROUTER','FEC-END'])],\
-					row=cols['coredelay'],order=3, ci=None, legend=False)
-			elif val in ['fmaxcount']:
-				ax = sns.lmplot(x='グループ数g',y=val,hue='sim_id',aspect=1,\
-					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-END'])],\
-					row=cols['coredelay'],order=3, ci=None, legend=False)
-			else:
-				ax = sns.lmplot(x='グループ数g',y=val,hue='sim_id',aspect=1,\
-					data=f_stream_,col=cols['coredelay'],\
-					order=3, ci=None, legend=False)	
 
-			ax.set(xlabel='ルータ台数',ylabel=f'{labels[val][0]}{labels[val][1]}')
-			ax.fig.suptitle(f'ルータ台数の影響による「{labels[val][0]}」の変移\nフロー数f = {f} ', fontsize=12, y=0.98)
-			ax.add_legend(title=" ")
+			if val in ['lossr']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+				g.set(ylim=(0,2))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			elif val in ['effrec']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+				# 	tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+			
+			elif val in ['thp']:
+				# sns.set_theme(style="white")
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=True,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+					g.set(ylim=(75,95))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			elif val in ['redun']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					# tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+				# 	# g.set(ylim=(75,95))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			elif val in ['fmaxcount']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						# data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						# fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					# tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+					# g.set(ylim=(75,95))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			elif val in ['retr']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+					g.set(ylim=(0,1.5))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			elif val in ['timeout']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+					g.set(ylim=(0,100))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			elif val in ['fr']:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+					# g.set(ylim=(0,100))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+
+			else:
+				g = sns.FacetGrid(f_stream, col=cols['coredelay'],margin_titles=True,sharey=False,legend_out=True)
+				for (i,j,k),data in g.facet_data():
+					ax = g.axes[i,j]
+					for w in fwins:
+						data_ = data.loc[ (data['sim_id'] == 'FEC-ROUTER') & (data[cols['fwin']] == w) ]						
+						fecr = ax.plot(groups,data_[val],'o-',label=f'FEC-R fwin = {w}')
+						data_ = data.loc[ (data['sim_id'] == 'FEC-END') & (data[cols['fwin']] == w) ]
+						fece = ax.plot(groups,data_[val],'^--',label=f'FEC-E fmax = {w}')
+					data_ = data.loc[ (data['sim_id'] == 'TCP') ]
+					print(data_[val])
+					thp_stream = [data_[val]]*5
+					tcp = ax.plot(groups,thp_stream,'kv:',label=f'TCP')
+					# g.set(ylim=(0,2))
+				ax.legend()
+				sns.move_legend(ax,'upper left',bbox_to_anchor=(1,1))
+			g.set(xlabel=cols['nGroups'],ylabel=f'{labels[val][0]}{labels[val][1]}')
+			# g.fig.suptitle(f'「{labels[val][0]}」の変移 | フロー数f = {flow} ', y=1.5)
 			plt.xticks(groups)
-			make_space_above(ax, topmargin=3)    
+			# make_space_above(g, topmargin=1)    
 			plt.show()
-			# pdf.savefig(ax.fig) # save each figure in the pdf
-			# plt.savefig(f'f{f}-{labels[val][0]}.pdf')
+			# pdf.savefig(g.fig) # save each figure in the pdf
+			g.savefig(f'exhaustive-f{flow}-{val}.pdf')
 	pdf.close()
 
 

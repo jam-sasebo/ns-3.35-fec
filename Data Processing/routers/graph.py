@@ -12,8 +12,7 @@ from matplotlib.transforms import Bbox
 from matplotlib.font_manager import FontProperties
 import matplotlib.backends.backend_pdf
 pdf = matplotlib.backends.backend_pdf.PdfPages("output.pdf")
-# matplotlib.font_manager.FontProperties(fname ="IPAPGothic" )
-sns.set(font="IPAexGothic")
+sns.set(font="IPAexGothic",style="whitegrid",font_scale=2.5)
 routers = [5,7,9,11,13,15]
 fwins = [10,20,0]
 groups = [1,3,0]
@@ -30,7 +29,8 @@ labels = {
 	'redun':['冗長率','[%]'],
 	'fmaxcount':['Fmaxカウント',''],
 	'lossr':['ロス率','[%]'],
-	'effrec':['有効回復成功率','[%]']
+	'effrec':['有効回復成功率','[%]'],
+	'fr':['高速回復カウント','[回]']
 }
 
 def make_space_above(axis, topmargin=1):
@@ -48,10 +48,11 @@ def main():
 	file_path = sys.argv[1]
 	df = pd.read_csv(file_path)
 	df = df.rename(columns={'fwin':'w','fmax':'fwin'})
-	for f in [10,20]:
+	# df = df.loc[df['nGroups'] == 3]
+	for f in [20]:
 		f_stream = df.loc[df['nFlows'] == f].copy()
 		for val in sys.argv[2::]:
-			cols = {'fwin':'FECウインドウfwin','nGroups':'グループ数g'}
+			cols = {'fwin':'fwin','nGroups':'g'}
 			rows = {'fecrouter':'FEC-ROUTER','fecend':'FEC-END','tcprouter':'TCP'}
 			f_stream_ = f_stream.rename(columns=cols)
 			f_stream_ = f_stream_.replace(rows)
@@ -61,13 +62,13 @@ def main():
 					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-ROUTER','FEC-END'])],\
 					col=cols['fwin'],row=cols['nGroups'],order=3, ci=None, legend=False)
 			elif val in ['effrec']:
-				f_stream_=f_stream_.loc[f_stream_['グループ数g'] == 3]
+				f_stream_=f_stream_.loc[f_stream_[cols['nGroups']] == 3]
 				title = "グループ数g = 3"
 				ax = sns.lmplot(x='nRouters',y=val,hue='sim_id',aspect=1,\
 					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-ROUTER','FEC-END'])],\
 					col=cols['fwin'],order=2, ci=None, legend=False)
 			elif val in ['redun']:
-				ax = sns.lmplot(x='nRouters',y=val,hue='sim_id',aspect=1,\
+				ax = sns.lmplot(x='nRouters',y=val,hue='sim_id',aspect=1.2,\
 					data=f_stream_.loc[f_stream_['sim_id'].isin(['FEC-ROUTER','FEC-END'])],\
 					order=3, ci=None, legend=False)
 			elif val in ['fmaxcount']:
@@ -78,15 +79,17 @@ def main():
 				ax = sns.lmplot(x='nRouters',y=val,hue='sim_id',aspect=1,\
 					data=f_stream_,col=cols['fwin'],row=cols['nGroups'],\
 					order=3, ci=None, legend=False)	
-
 			ax.set(xlabel='ルータ台数',ylabel=f'{labels[val][0]}{labels[val][1]}')
-			ax.fig.suptitle(f'ルータ台数の影響による「{labels[val][0]}」の変移\nフロー数f = {f}  |  遅延時間d = {delay}[ms] {title}', fontsize=12, y=0.98)
-			ax.add_legend(title=" ")
+			# ax.fig.suptitle(f'ルータ台数の影響による「{labels[val][0]}」の変移\nフロー数f = {f} \
+			# 	 |  遅延時間d = {delay}[ms] {title}', fontsize=30, y=1.2)
+			ax.add_legend(title='')
+			# sns.move_legend(ax,'upper right',bbox_to_anchor=(1,1.2))
 			plt.xticks(routers)
-			make_space_above(ax, topmargin=1)    
+			# make_space_above(ax, topmargin=1)    
+			# plt.tight_layout()
 			# plt.show()
-			pdf.savefig(ax.fig) # save each figure in the pdf
-			plt.savefig(f'f{f}-{labels[val][0]}.pdf')
+			# pdf.savefig(ax.fig) # save each figure in the pdf
+			plt.savefig(f'routers-f{f}-{val}.pdf')
 	pdf.close()
 		# ax = sns.lmplot(x='nRouters',y='retr',hue='sim_id',data=f_stream,col='fmax',row='nGroups',order=3, ci=None, legend=True)	
 		# ax.set(xlabel='ルータ台数',ylabel='再送率[%]')
