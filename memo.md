@@ -21,6 +21,26 @@ Print fields and their values
      $36 fwin   $37 93
      $38 nGroups     $39 3
 
+
+           << " time "    << Simulator::Now ().GetSeconds ()
+           << " cwnd "    << m_cwnd                //Window size
+           << " st "      << m_ssThresh            //Slowdown threshold
+           << " ack "     << m_lastAckedSeq        //Last ACk number
+           << " sent "    << m_sentdatapkt         //Number of sent data packets
+           << " lost "    << m_lostdatapkt         //Number of lost packets
+           << " ret "     << m_retPkt              //Number of retransmit packets
+           << " fec "     << m_sentfecpkt          //Number of redundant packets
+           << " feclost " << m_lostfecpkt          //Number of lost redundant packets
+           << " rec "     << m_recover             //Number of recoveries
+           << " rec_ret " << m_recover_rexmit      //Number of recoveries (ret packets)
+           << " to "      << m_timeout             //Number of timeouts
+           << " fr "      << m_fastRecovery        //Number of fast recoveries  
+           << " rc "      << m_rateControl         //Number of rate control counts
+           << " seq "     << m_seq                 //Sequence number
+           << " mc "      << m_fmaxCount           //Number of fmax counts
+           << " ac "      << m_ackSuppression      //Number of ack suppression counts
+           << " fwin "    << fwin                  //fec window size
+           << " nGroups " << uint32_t (nGroups)    //Number of groups
 bashで作成した指標計算結果ファイルの形式
      $1 id      $2 tcprouter
      $3 f       $4 20
